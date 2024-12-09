@@ -6,7 +6,7 @@ import {
   Operation,
   ServerError,
 } from '@apollo/client/core';
-import type { SeverityLevel } from '@sentry/types';
+import { SeverityLevel } from '@sentry/browser';
 import { Observable } from 'zen-observable-ts';
 
 import { GraphQLBreadcrumb, makeBreadcrumb } from './breadcrumb';
@@ -89,7 +89,7 @@ export class SentryLink extends ApolloLink {
         complete: () => {
           originalObserver.complete();
         },
-        error: (error) => {
+        error: (error: { result: FetchResult } & Error) => {
           if (attachBreadcrumbs) {
             // We must have a breadcrumb if attachBreadcrumbs was set
             (breadcrumb as GraphQLBreadcrumb).level = 'error';
